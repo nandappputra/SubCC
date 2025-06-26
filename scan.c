@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "decl.h"
 #include "data.h"
 #include "defs.h"
 
@@ -67,6 +68,7 @@ int scan(struct token *t) {
 
     switch (c) {
     case EOF:
+        t->token = T_EOF;
         return (0);
     case '+':
         t->token = T_PLUS;
