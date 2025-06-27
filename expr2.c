@@ -1,9 +1,8 @@
-#include <stdio.h>
 #include <stdlib.h>
 
+#include "decl.h"
 #include "data.h"
 #include "defs.h"
-#include "decl.h"
 
 static struct ASTnode *primary(void) {
     struct ASTnode *n;
@@ -36,45 +35,63 @@ int arithop(int tok) {
     }
 }
 
-//                      EOF +   -   *   /  I
-static int OpPrec[] = { 0, 10, 10, 20, 20, 0 };
-
-static int operator_precedence(int tokenType) {
-    int prec = OpPrec[tokenType];
-
-    if (prec == 0) {
-        fprintf(stderr, "syntax error on line %d, token %d\n", Line, tokenType);
-        exit(1);
-    }
-
-    return prec;
-}
-
-
-struct ASTnode* binexpr(int inp) {
-    struct ASTnode *left, *right;
+struct ASTnode* multiplicative_expression(void) {
+    struct ASTnode* left, *right;
     int tokenType;
 
     left = primary();
     tokenType = Token.token;
 
     if (tokenType == T_EOF) {
-        return (left);
+        return left;
     }
 
-    while (operator_precedence(tokenType) > inp)
-    {
+    while (tokenType == T_STAR || tokenType == T_SLASH) {
         scan(&Token);
-        
-        right = binexpr(OpPrec[tokenType]);
+
+        right = multiplicative_expression();
 
         left = make_ast_node(arithop(tokenType), left, right, 0);
 
         tokenType = Token.token;
+
         if (tokenType == T_EOF) {
-            return (left);
+            return left;
         }
     }
 
     return left;
+}
+
+struct ASTnode* additive_expression(void) {
+    struct ASTnode* left, *right;
+    int tokenType;
+
+    left = multiplicative_expression();
+    tokenType = Token.token;
+
+    if (tokenType == T_EOF) {
+        return left;
+    }
+
+    
+    while (tokenType == T_PLUS || tokenType == T_MINUS  ) {
+        scan(&Token);
+
+        right = multiplicative_expression();
+
+        left = make_ast_node(arithop(tokenType), left, right, 0);
+
+        tokenType = Token.token;
+
+        if (tokenType == T_EOF) {
+            return left;
+        }
+    }
+
+    return left;
+}
+
+struct ASTnode* binexpr(int inp) {
+    return additive_expression();
 }
