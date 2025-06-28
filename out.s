@@ -1,4 +1,3 @@
-# Need to fix for windows platform
 	.text
 .LC0:
 	.string	"%d\n"
@@ -11,22 +10,20 @@ printint:
 	movl	%eax, %esi
 	leaq	.LC0(%rip), %rdi
 	movl	$0, %eax
-	call	printf
+	call	printf@PLT
 	nop
 	leave
 	ret
 
 	.globl	main
-	#.type	main, @function
+	.type	main, @function
 main:
 	pushq	%rbp
 	movq	%rsp, %rbp
-	movq	$2, %r8
+	movq	$12, %r8
 	movq	$3, %r9
-	movq	$4, %r10
-	imulq	%r9, %r10
-	addq	%r8, %r10
-	movq	%r10, %rdi
+	imulq	%r8, %r9
+	movq	%r9, %rdi
 	call	printint
 	movl	$0, %eax
 	popq	%rbp

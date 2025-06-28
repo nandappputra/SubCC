@@ -15,6 +15,7 @@ int Putback = '\n';
 FILE *Infile;
 FILE *Outfile;
 struct token Token;
+char Text[TEXTLEN + 1];
 
 static void scan_file(void) {
     struct token T;
@@ -43,10 +44,9 @@ void main(int argc, char *argv[]) {
     }
 
     scan(&Token);
-    n = binexpr(0);
-    printf("%d\n", interpretAST(n));
-    generatecode(n);
-
-    fclose(Outfile);
+    genpreamble();
+    statements();
+    genpostamble();
+    fclose(Outfile);   
     exit(0);
 }

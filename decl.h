@@ -23,4 +23,16 @@ int cgmul(int r1, int r2);
 int cgdiv(int r1, int r2);
 void cgprintint(int r);
 
+void match(int t, char *what);
+void semi(void);
+
+void genpreamble(void);
+void genpostamble(void);
+void genfreeregs(void);
+void genprintint(int reg);
+
+int genAST(struct ASTnode *n);
+
+void statements();
+
 #endif

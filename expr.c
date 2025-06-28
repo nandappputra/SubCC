@@ -58,7 +58,7 @@ struct ASTnode* binexpr(int inp) {
     left = primary();
     tokenType = Token.token;
 
-    if (tokenType == T_EOF) {
+    if (tokenType == T_SEMI) {
         return (left);
     }
 
@@ -71,7 +71,7 @@ struct ASTnode* binexpr(int inp) {
         left = make_ast_node(arithop(tokenType), left, right, 0);
 
         tokenType = Token.token;
-        if (tokenType == T_EOF) {
+        if (tokenType == T_SEMI) {
             return (left);
         }
     }
